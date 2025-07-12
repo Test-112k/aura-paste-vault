@@ -13,7 +13,7 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const { signup, loginWithGoogle } = useAuth();
+  const { signup } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -77,25 +77,6 @@ const Signup = () => {
     }
   };
 
-  const handleGoogleSignup = async () => {
-    setIsLoading(true);
-    try {
-      await loginWithGoogle();
-      toast({
-        title: "Success!",
-        description: "Account created successfully with Google.",
-      });
-      navigate("/dashboard");
-    } catch (error: any) {
-      toast({
-        title: "Google Signup Failed",
-        description: error.message || "An error occurred during Google signup.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen dark bg-gradient-to-br from-background via-background to-primary/20">
@@ -162,27 +143,6 @@ const Signup = () => {
                   disabled={isLoading}
                 >
                   {isLoading ? "Creating account..." : "Create Account"}
-                </Button>
-
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t" />
-                  </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-background px-2 text-muted-foreground">
-                      Or continue with
-                    </span>
-                  </div>
-                </div>
-
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  className="w-full" 
-                  onClick={handleGoogleSignup}
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Please wait..." : "Continue with Google"}
                 </Button>
               </form>
 

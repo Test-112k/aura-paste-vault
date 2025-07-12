@@ -1,5 +1,5 @@
 import { db } from './firebase';
-import { collection, doc, setDoc, getDoc, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
+import { collection, doc, setDoc, getDoc, query, where, getDocs, addDoc } from 'firebase/firestore';
 import { User } from 'firebase/auth';
 
 export interface Paste {
@@ -25,7 +25,7 @@ export const createPaste = async (
   const paste: Paste = {
     ...pasteData,
     id: pasteId,
-    authorId: user?.uid,
+    authorId: user?.uid || null,
     authorName: user?.displayName || user?.email || 'Anonymous',
     createdAt: new Date().toISOString(),
     viewCount: 0,
@@ -33,11 +33,22 @@ export const createPaste = async (
   };
 
   try {
-    await setDoc(doc(db, 'pastes', pasteId), paste);
-    return paste;
+    console.log('Creating paste:', paste);
+    console.log('Firebase db:', db);
+    
+    // Try using addDoc with the collection instead of setDoc
+    const docRef = await addDoc(collection(db, 'pastes'), paste);
+    console.log('Paste created successfully with ID:', docRef.id);
+    
+    // Update the paste with the actual document ID
+    const updatedPaste = { ...paste, id: docRef.id };
+    await setDoc(doc(db, 'pastes', docRef.id), updatedPaste);
+    
+    return updatedPaste;
   } catch (error) {
     console.error('Error creating paste:', error);
-    throw new Error('Failed to create paste');
+    console.error('Error details:', JSON.stringify(error, null, 2));
+    throw new Error(`Failed to create paste: ${error.message || 'Unknown error'}`);
   }
 };
 
@@ -68,13 +79,14 @@ export const getUserPastes = async (userId: string): Promise<Paste[]> => {
   try {
     const q = query(
       collection(db, 'pastes'),
-      where('authorId', '==', userId),
-      orderBy('createdAt', 'desc'),
-      limit(50)
+      where('authorId', '==', userId)
     );
     
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => doc.data() as Paste);
+    const pastes = querySnapshot.docs.map(doc => doc.data() as Paste);
+    
+    // Sort by createdAt descending
+    return pastes.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   } catch (error) {
     console.error('Error fetching user pastes:', error);
     return [];

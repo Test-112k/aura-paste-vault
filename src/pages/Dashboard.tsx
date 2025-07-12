@@ -19,6 +19,7 @@ import {
 import { Link, Navigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import AdBanner from "@/components/AdBanner";
+import UserProfile from "@/components/UserProfile";
 import { useAuth } from "@/contexts/AuthContext";
 import { getUserPastes, type Paste } from "@/lib/pasteService";
 
@@ -112,12 +113,15 @@ const Dashboard = () => {
               Manage your pastes and view analytics
             </p>
           </div>
-          <Link to="/">
-            <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
-              <Plus className="h-4 w-4 mr-2" />
-              New Paste
-            </Button>
-          </Link>
+          <div className="flex items-center gap-3">
+            <UserProfile />
+            <Link to="/">
+              <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
+                <Plus className="h-4 w-4 mr-2" />
+                New Paste
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Stats Cards */}

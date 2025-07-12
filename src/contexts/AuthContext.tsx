@@ -5,8 +5,9 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  GoogleAuthProvider,
-  signInWithPopup
+  updatePassword,
+  updateEmail,
+  updateProfile
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 
@@ -15,7 +16,9 @@ interface AuthContextType {
   signup: (email: string, password: string) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  loginWithGoogle: () => Promise<void>;
+  updateUserProfile: (displayName: string, photoURL?: string) => Promise<void>;
+  updateUserEmail: (email: string) => Promise<void>;
+  updateUserPassword: (password: string) => Promise<void>;
   loading: boolean;
 }
 
@@ -45,9 +48,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     await signOut(auth);
   };
 
-  const loginWithGoogle = async () => {
-    const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
+  const updateUserProfile = async (displayName: string, photoURL?: string) => {
+    if (currentUser) {
+      await updateProfile(currentUser, { displayName, photoURL });
+    }
+  };
+
+  const updateUserEmail = async (email: string) => {
+    if (currentUser) {
+      await updateEmail(currentUser, email);
+    }
+  };
+
+  const updateUserPassword = async (password: string) => {
+    if (currentUser) {
+      await updatePassword(currentUser, password);
+    }
   };
 
   useEffect(() => {
@@ -64,7 +80,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     signup,
     login,
     logout,
-    loginWithGoogle,
+    updateUserProfile,
+    updateUserEmail,
+    updateUserPassword,
     loading
   };
 

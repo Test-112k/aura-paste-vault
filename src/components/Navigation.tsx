@@ -76,6 +76,11 @@ const Navigation = ({ isDarkMode, toggleDarkMode }: NavigationProps) => {
                     Dashboard
                   </Button>
                 </Link>
+                <Link to="/legal">
+                  <Button variant="ghost" size="sm">
+                    Legal
+                  </Button>
+                </Link>
                 <Button 
                   variant="outline" 
                   size="sm"
@@ -95,6 +100,11 @@ const Navigation = ({ isDarkMode, toggleDarkMode }: NavigationProps) => {
                 <Link to="/signup">
                   <Button size="sm" className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
                     Sign Up
+                  </Button>
+                </Link>
+                <Link to="/legal">
+                  <Button variant="ghost" size="sm">
+                    Legal
                   </Button>
                 </Link>
               </div>
@@ -142,6 +152,11 @@ const Navigation = ({ isDarkMode, toggleDarkMode }: NavigationProps) => {
                       Dashboard
                     </Button>
                   </Link>
+                  <Link to="/legal">
+                    <Button variant="ghost" size="sm" className="w-full justify-start">
+                      Legal
+                    </Button>
+                  </Link>
                   <Button 
                     variant="outline" 
                     size="sm"
@@ -162,6 +177,11 @@ const Navigation = ({ isDarkMode, toggleDarkMode }: NavigationProps) => {
                   <Link to="/signup">
                     <Button size="sm" className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
                       Sign Up
+                    </Button>
+                  </Link>
+                  <Link to="/legal">
+                    <Button variant="ghost" size="sm" className="w-full justify-start">
+                      Legal
                     </Button>
                   </Link>
                 </div>

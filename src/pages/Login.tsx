@@ -12,7 +12,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const { login, loginWithGoogle } = useAuth();
+  const { login } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -58,25 +58,6 @@ const Login = () => {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    setIsLoading(true);
-    try {
-      await loginWithGoogle();
-      toast({
-        title: "Success!",
-        description: "Successfully logged in with Google.",
-      });
-      navigate("/dashboard");
-    } catch (error: any) {
-      toast({
-        title: "Google Login Failed",
-        description: error.message || "An error occurred during Google login.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen dark bg-gradient-to-br from-background via-background to-primary/20">
@@ -129,27 +110,6 @@ const Login = () => {
                   disabled={isLoading}
                 >
                   {isLoading ? "Signing in..." : "Sign In"}
-                </Button>
-                
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t" />
-                  </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-background px-2 text-muted-foreground">
-                      Or continue with
-                    </span>
-                  </div>
-                </div>
-
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  className="w-full" 
-                  onClick={handleGoogleLogin}
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Please wait..." : "Continue with Google"}
                 </Button>
               </form>
 
