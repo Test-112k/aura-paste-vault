@@ -10,7 +10,7 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -30,7 +30,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/20">
+    <div className="min-h-screen dark bg-gradient-to-br from-background via-background to-primary/20">
       <Navigation isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
       
       <div className="container mx-auto px-4 pt-20">

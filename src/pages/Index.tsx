@@ -19,7 +19,7 @@ const Index = () => {
   const [expiration, setExpiration] = useState("1day");
   const [password, setPassword] = useState("");
   const [visibility, setVisibility] = useState("public");
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
   const { toast } = useToast();
 
@@ -60,7 +60,7 @@ const Index = () => {
   const lineCount = content.split('\n').length;
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'dark' : ''}`}>
+    <div className="min-h-screen dark bg-background text-foreground transition-colors">
       <div className="min-h-screen bg-background text-foreground transition-colors">
         <Navigation isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
         
@@ -85,27 +85,27 @@ const Index = () => {
 
           {/* Features Grid */}
           <div className="grid md:grid-cols-3 gap-6 mb-12">
-            <Card className="text-center hover-scale">
+            <Card className="text-center hover-scale animate-scale-in">
+              <CardHeader>
+                <Code className="h-12 w-12 mx-auto text-primary mb-2" />
+                <CardTitle>Syntax Highlighting</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">Beautiful syntax highlighting for all major programming languages</p>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center hover-scale animate-scale-in">
               <CardHeader>
                 <Clock className="h-12 w-12 mx-auto text-primary mb-2" />
-                <CardTitle>Flexible Expiration</CardTitle>
+                <CardTitle>Quick & Fast</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">Set custom expiration times from 10 minutes to never expire</p>
+                <p className="text-muted-foreground">Create and share pastes instantly with our lightning-fast platform</p>
               </CardContent>
             </Card>
 
-            <Card className="text-center hover-scale">
-              <CardHeader>
-                <Shield className="h-12 w-12 mx-auto text-primary mb-2" />
-                <CardTitle>Password Protection</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">Secure your pastes with optional password protection</p>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center hover-scale">
+            <Card className="text-center hover-scale animate-scale-in">
               <CardHeader>
                 <Users className="h-12 w-12 mx-auto text-primary mb-2" />
                 <CardTitle>User Dashboard</CardTitle>
@@ -117,7 +117,7 @@ const Index = () => {
           </div>
 
           {/* Main Paste Creation Form */}
-          <Card className="max-w-4xl mx-auto">
+          <Card className="max-w-4xl mx-auto animate-fade-in pulse-glow">
             <CardHeader>
               <CardTitle className="text-2xl text-center">Create New Paste</CardTitle>
             </CardHeader>
@@ -171,59 +171,11 @@ const Index = () => {
                 </div>
               </div>
 
-              {/* Options Row */}
-              <div className="grid md:grid-cols-2 gap-6">
-                {/* Expiration */}
-                <div className="space-y-2">
-                  <Label htmlFor="expiration">Expiration</Label>
-                  <Select value={expiration} onValueChange={setExpiration}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select expiration" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="10min">10 Minutes</SelectItem>
-                      <SelectItem value="1hour">1 Hour</SelectItem>
-                      <SelectItem value="1day">1 Day</SelectItem>
-                      <SelectItem value="1week">1 Week</SelectItem>
-                      <SelectItem value="1month">1 Month</SelectItem>
-                      <SelectItem value="never">Never Expire</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Visibility */}
-                <div className="space-y-2">
-                  <Label htmlFor="visibility">Visibility</Label>
-                  <Select value={visibility} onValueChange={setVisibility}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select visibility" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="public">Public</SelectItem>
-                      <SelectItem value="unlisted">Unlisted</SelectItem>
-                      <SelectItem value="private">Private</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              {/* Password Protection */}
-              <div className="space-y-2">
-                <Label htmlFor="password">Password Protection (Optional)</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Enter password to protect this paste..."
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-
               {/* Create Button */}
               <Button 
                 onClick={handleCreatePaste}
                 disabled={isCreating}
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3 text-lg"
+                className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white font-semibold py-3 text-lg hover-scale"
               >
                 {isCreating ? "Creating Paste..." : "Create Paste"}
               </Button>
