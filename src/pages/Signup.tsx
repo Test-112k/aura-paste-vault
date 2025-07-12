@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +16,11 @@ const Signup = () => {
   const { signup, loginWithGoogle } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Set dark mode as default
+    document.documentElement.classList.add("dark");
+  }, []);
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);

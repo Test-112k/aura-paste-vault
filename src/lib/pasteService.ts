@@ -20,7 +20,7 @@ export const createPaste = async (
   user?: User | null
 ): Promise<Paste> => {
   const pasteId = Math.random().toString(36).substring(2, 10);
-  const url = `${window.location.origin}/paste/${pasteId}`;
+  const url = `https://aurapaste.netlify.app/paste/${pasteId}`;
   
   const paste: Paste = {
     ...pasteData,

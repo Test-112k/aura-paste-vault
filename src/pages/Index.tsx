@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -25,6 +25,11 @@ const Index = () => {
   const { toast } = useToast();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Set dark mode as default
+    document.documentElement.classList.add("dark");
+  }, []);
 
   const handleCreatePaste = async () => {
     if (!content.trim()) {
