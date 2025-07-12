@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 import Navigation from "@/components/Navigation";
 
 const Login = () => {
@@ -10,6 +12,9 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const { login, loginWithGoogle } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -18,10 +23,54 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!email || !password) {
+      toast({
+        title: "Error",
+        description: "Please fill in all fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
-    // TODO: Implement Firebase authentication
-    console.log("Login attempt:", { email, password });
-    setIsLoading(false);
+    
+    try {
+      await login(email, password);
+      toast({
+        title: "Success!",
+        description: "Successfully logged in.",
+      });
+      navigate("/dashboard");
+    } catch (error: any) {
+      toast({
+        title: "Login Failed",
+        description: error.message || "An error occurred during login.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setIsLoading(true);
+    try {
+      await loginWithGoogle();
+      toast({
+        title: "Success!",
+        description: "Successfully logged in with Google.",
+      });
+      navigate("/dashboard");
+    } catch (error: any) {
+      toast({
+        title: "Google Login Failed",
+        description: error.message || "An error occurred during Google login.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -75,6 +124,27 @@ const Login = () => {
                   disabled={isLoading}
                 >
                   {isLoading ? "Signing in..." : "Sign In"}
+                </Button>
+                
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">
+                      Or continue with
+                    </span>
+                  </div>
+                </div>
+
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="w-full" 
+                  onClick={handleGoogleLogin}
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Please wait..." : "Continue with Google"}
                 </Button>
               </form>
 

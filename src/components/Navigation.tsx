@@ -2,7 +2,9 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun, User, LogIn, Menu, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 interface NavigationProps {
   isDarkMode: boolean;
@@ -11,7 +13,26 @@ interface NavigationProps {
 
 const Navigation = ({ isDarkMode, toggleDarkMode }: NavigationProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // This will be managed by Firebase Auth
+  const { currentUser, logout } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toast({
+        title: "Logged out",
+        description: "You have been successfully logged out.",
+      });
+      navigate("/");
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to log out. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
@@ -47,7 +68,7 @@ const Navigation = ({ isDarkMode, toggleDarkMode }: NavigationProps) => {
             </Button>
 
             {/* Auth Buttons */}
-            {isLoggedIn ? (
+            {currentUser ? (
               <div className="flex items-center space-x-2">
                 <Link to="/dashboard">
                   <Button variant="ghost" size="sm">
@@ -58,7 +79,7 @@ const Navigation = ({ isDarkMode, toggleDarkMode }: NavigationProps) => {
                 <Button 
                   variant="outline" 
                   size="sm"
-                  onClick={() => setIsLoggedIn(false)}
+                  onClick={handleLogout}
                 >
                   Logout
                 </Button>
@@ -113,7 +134,7 @@ const Navigation = ({ isDarkMode, toggleDarkMode }: NavigationProps) => {
                 </Button>
               </div>
 
-              {isLoggedIn ? (
+              {currentUser ? (
                 <div className="flex flex-col space-y-2 px-2">
                   <Link to="/dashboard">
                     <Button variant="ghost" size="sm" className="w-full justify-start">
@@ -124,7 +145,7 @@ const Navigation = ({ isDarkMode, toggleDarkMode }: NavigationProps) => {
                   <Button 
                     variant="outline" 
                     size="sm"
-                    onClick={() => setIsLoggedIn(false)}
+                    onClick={handleLogout}
                     className="w-full"
                   >
                     Logout

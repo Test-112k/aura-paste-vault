@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 import Navigation from "@/components/Navigation";
 
 const Signup = () => {
@@ -11,6 +13,9 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const { signup, loginWithGoogle } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -19,14 +24,72 @@ const Signup = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      alert("Passwords don't match");
+    
+    if (!email || !password || !confirmPassword) {
+      toast({
+        title: "Error",
+        description: "Please fill in all fields.",
+        variant: "destructive",
+      });
       return;
     }
+    
+    if (password !== confirmPassword) {
+      toast({
+        title: "Error",
+        description: "Passwords don't match.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (password.length < 6) {
+      toast({
+        title: "Error",
+        description: "Password must be at least 6 characters long.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
-    // TODO: Implement Firebase authentication
-    console.log("Signup attempt:", { email, password });
-    setIsLoading(false);
+    
+    try {
+      await signup(email, password);
+      toast({
+        title: "Success!",
+        description: "Account created successfully.",
+      });
+      navigate("/dashboard");
+    } catch (error: any) {
+      toast({
+        title: "Signup Failed",
+        description: error.message || "An error occurred during signup.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSignup = async () => {
+    setIsLoading(true);
+    try {
+      await loginWithGoogle();
+      toast({
+        title: "Success!",
+        description: "Account created successfully with Google.",
+      });
+      navigate("/dashboard");
+    } catch (error: any) {
+      toast({
+        title: "Google Signup Failed",
+        description: error.message || "An error occurred during Google signup.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -94,6 +157,27 @@ const Signup = () => {
                   disabled={isLoading}
                 >
                   {isLoading ? "Creating account..." : "Create Account"}
+                </Button>
+
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">
+                      Or continue with
+                    </span>
+                  </div>
+                </div>
+
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="w-full" 
+                  onClick={handleGoogleSignup}
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Please wait..." : "Continue with Google"}
                 </Button>
               </form>
 
