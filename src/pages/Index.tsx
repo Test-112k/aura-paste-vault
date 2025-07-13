@@ -13,7 +13,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { createPaste, downloadPaste } from "@/lib/pasteService";
 import Navigation from "@/components/Navigation";
 import AdBanner from "@/components/AdBanner";
-import SocialBar from "@/components/SocialBar";
 
 const Index = () => {
   const [content, setContent] = useState("");
@@ -128,7 +127,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen dark bg-background text-foreground transition-colors">
-      <SocialBar />
       <div className="min-h-screen bg-background text-foreground transition-colors">
         <Navigation isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
         
