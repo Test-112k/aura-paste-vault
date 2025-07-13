@@ -19,32 +19,34 @@ export const createPaste = async (
   pasteData: Omit<Paste, 'id' | 'createdAt' | 'viewCount' | 'url'>,
   user?: User | null
 ): Promise<Paste> => {
-  const pasteId = Math.random().toString(36).substring(2, 10);
-  const url = `https://aurapaste.netlify.app/paste/${pasteId}`;
-  
-  const paste: Paste = {
-    ...pasteData,
-    id: pasteId,
-    authorId: user?.uid || null,
-    authorName: user?.displayName || user?.email || 'Anonymous',
-    createdAt: new Date().toISOString(),
-    viewCount: 0,
-    url
-  };
-
   try {
-    console.log('Creating paste:', paste);
+    console.log('Creating paste with data:', pasteData);
     console.log('Firebase db:', db);
     
-    // Try using addDoc with the collection instead of setDoc
-    const docRef = await addDoc(collection(db, 'pastes'), paste);
+    // Create paste object with initial data
+    const initialPaste = {
+      ...pasteData,
+      authorId: user?.uid || null,
+      authorName: user?.displayName || user?.email || 'Anonymous',
+      createdAt: new Date().toISOString(),
+      viewCount: 0
+    };
+
+    // Add document to Firestore - let Firebase generate the ID
+    const docRef = await addDoc(collection(db, 'pastes'), initialPaste);
     console.log('Paste created successfully with ID:', docRef.id);
     
-    // Update the paste with the actual document ID
-    const updatedPaste = { ...paste, id: docRef.id };
-    await setDoc(doc(db, 'pastes', docRef.id), updatedPaste);
+    // Create the final paste object with the generated ID and URL
+    const finalPaste: Paste = {
+      ...initialPaste,
+      id: docRef.id,
+      url: `${window.location.origin}/paste/${docRef.id}`
+    };
     
-    return updatedPaste;
+    // Update the document with the final data including ID and URL
+    await setDoc(doc(db, 'pastes', docRef.id), finalPaste);
+    
+    return finalPaste;
   } catch (error) {
     console.error('Error creating paste:', error);
     console.error('Error details:', JSON.stringify(error, null, 2));
@@ -89,6 +91,26 @@ export const getUserPastes = async (userId: string): Promise<Paste[]> => {
     return pastes.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   } catch (error) {
     console.error('Error fetching user pastes:', error);
+    return [];
+  }
+};
+
+export const getRecentPublicPastes = async (limit: number = 20): Promise<Paste[]> => {
+  try {
+    const q = query(
+      collection(db, 'pastes'),
+      where('visibility', '==', 'public')
+    );
+    
+    const querySnapshot = await getDocs(q);
+    const pastes = querySnapshot.docs.map(doc => doc.data() as Paste);
+    
+    // Sort by createdAt descending and limit results
+    return pastes
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .slice(0, limit);
+  } catch (error) {
+    console.error('Error fetching recent public pastes:', error);
     return [];
   }
 };

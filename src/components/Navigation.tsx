@@ -50,10 +50,10 @@ const Navigation = ({ isDarkMode, toggleDarkMode }: NavigationProps) => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link to="/trending" className="hover:text-primary transition-colors">
-              Trending
+            <Link to="/recent" className="hover:text-primary transition-colors font-medium">
+              Recent
             </Link>
-            <Link to="/about" className="hover:text-primary transition-colors">
+            <Link to="/about" className="hover:text-primary transition-colors font-medium">
               About
             </Link>
             
@@ -74,11 +74,6 @@ const Navigation = ({ isDarkMode, toggleDarkMode }: NavigationProps) => {
                   <Button variant="ghost" size="sm">
                     <User className="h-4 w-4 mr-2" />
                     Dashboard
-                  </Button>
-                </Link>
-                <Link to="/legal">
-                  <Button variant="ghost" size="sm">
-                    Legal
                   </Button>
                 </Link>
                 <Button 
@@ -102,11 +97,6 @@ const Navigation = ({ isDarkMode, toggleDarkMode }: NavigationProps) => {
                     Sign Up
                   </Button>
                 </Link>
-                <Link to="/legal">
-                  <Button variant="ghost" size="sm">
-                    Legal
-                  </Button>
-                </Link>
               </div>
             )}
           </div>
@@ -126,10 +116,10 @@ const Navigation = ({ isDarkMode, toggleDarkMode }: NavigationProps) => {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t animate-slide-in-right">
             <div className="flex flex-col space-y-3">
-              <Link to="/trending" className="hover:text-primary transition-colors px-2 py-1">
-                Trending
+              <Link to="/recent" className="hover:text-primary transition-colors px-2 py-1 font-medium">
+                Recent
               </Link>
-              <Link to="/about" className="hover:text-primary transition-colors px-2 py-1">
+              <Link to="/about" className="hover:text-primary transition-colors px-2 py-1 font-medium">
                 About
               </Link>
               
@@ -152,11 +142,6 @@ const Navigation = ({ isDarkMode, toggleDarkMode }: NavigationProps) => {
                       Dashboard
                     </Button>
                   </Link>
-                  <Link to="/legal">
-                    <Button variant="ghost" size="sm" className="w-full justify-start">
-                      Legal
-                    </Button>
-                  </Link>
                   <Button 
                     variant="outline" 
                     size="sm"
@@ -177,11 +162,6 @@ const Navigation = ({ isDarkMode, toggleDarkMode }: NavigationProps) => {
                   <Link to="/signup">
                     <Button size="sm" className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
                       Sign Up
-                    </Button>
-                  </Link>
-                  <Link to="/legal">
-                    <Button variant="ghost" size="sm" className="w-full justify-start">
-                      Legal
                     </Button>
                   </Link>
                 </div>

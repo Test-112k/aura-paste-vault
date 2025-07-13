@@ -13,6 +13,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { createPaste, downloadPaste } from "@/lib/pasteService";
 import Navigation from "@/components/Navigation";
 import AdBanner from "@/components/AdBanner";
+import Footer from "@/components/Footer";
 
 const Index = () => {
   const [content, setContent] = useState("");
@@ -393,6 +394,7 @@ const Index = () => {
         {/* Footer Ad */}
         <AdBanner position="footer" />
       </div>
+      <Footer />
     </div>
   );
 };
